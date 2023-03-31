@@ -2,6 +2,7 @@
 
 @section('linkhead')
     <link rel="prefetch">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 @endsection
 
 @section('container')
@@ -49,7 +50,7 @@
                 <h5 class="card-header">Job Data</h5>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-bordered job-datatable">
+                        <table class="table table-hover" id="job-datatable">
                             <thead>
                                 <tr>
                                     <th width="1%">ID</th>
@@ -90,8 +91,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
-    {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="/assets/js/form-basic-inputs.js"></script>
+
 
     <script type="text/javascript">
         $(function() {
@@ -100,7 +101,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('.job-datatable').DataTable({
+            var table = $('#job-datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('job.index') }}",
@@ -141,7 +142,7 @@
                         toastr.success(JSON.stringify(data.success));
                         $('#jobForm').trigger("reset");
                         table.draw();
-                        $('#myMethod').val("edit");
+                        $('#myMethod').val("create");
 
                     },
                     error: function(data) {
@@ -182,7 +183,7 @@
             $('body').on('click', '.deleteJob', function() {
 
                 var job_id = $(this).data("id");
-                if (confirm("Are You sure want to delete!") == true) {
+                if (confirm("Are you sure want to delete!") == true) {
 
                     $.ajax({
                         type: "DELETE",

@@ -21,10 +21,12 @@
 
                         <div class="mb-3">
                             <label for="prov" class="form-label">Provinsi :</label>
-                            <select class="select2-provinsi form-select" name="prov_id" id="prov_id">
-                                <option selected=""></option>
+                            <select class="form-select select2-provinsi" name="prov_id" id="prov_id">
+                                <option value="" disabled selected>Pilih Provinsi</option>
                                 @foreach ($provs as $prov)
-                                    <option value={{ $prov->prov_id }}>{{ $prov->prov_name }}</option>
+                                    <option value="{{ $prov->prov_id }}">
+                                        {{ $prov->prov_name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -113,15 +115,9 @@
     {{-- Page JS --}}
     <script src="/assets/js/form-basic-inputs.js"></script>
 
-    <script>
-        // In your Javascript (external .js resource or <script> tag)
-        $(document).ready(function() {
-            $('.select2-provinsi').select2();
-        });
-    </script>
-
     <script type="text/javascript">
         $(function() {
+            $('.select2-provinsi').select2();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -162,8 +158,6 @@
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
-
-
                         // const myobj = JSON.parse(data.responseText);
                         // alert(JSON.stringify(data.success));
                         /* // Normalize and remove element and class is-invalid */
@@ -171,8 +165,9 @@
                         $('.invalid-feedback.d-block').remove();
                         toastr.success(JSON.stringify(data.success));
                         $('#kotaForm').trigger("reset");
+                        $('.select2-provinsi').val(null).trigger('change');
                         table.draw();
-                        $('#myMethod').val("edit");
+                        $('#myMethod').val("create");
 
                     },
                     error: function(data) {
@@ -206,9 +201,13 @@
                     $('#saveBtn').html('Ubah');
                     $('#kota_id').val(data.kota_id);
                     $('#kota_name').val(data.kota_name);
-                    $('#prov_id').val(data.prov_id);
+                    $('#prov_id').val(data.prov_id).trigger('change');
 
-                })
+
+                    // var options = $('#prov_id option:selected').val();
+                    // console.log(options);
+                    // $('.select2-provinsi').select2().val(data.prov_id);
+                });
             });
 
             $('body').on('click', '.deleteKota', function() {

@@ -54,9 +54,9 @@ class RsmstPropinsiController extends Controller
 
         //   @dd($request->myMethod);
         if ($request->myMethod == 'create') {
-            $myRules['prop_id'] = 'required|unique:rsmst_propinsis|max:25|min:3';
+            $myRules['prop_id'] = 'required|unique:rsmst_propinsis|max:25|min:1';
         } else if ($request->myMethod == 'edit') {
-            $myRules['prop_id'] = 'required|max:25|min:3';
+            $myRules['prop_id'] = 'required|max:25|min:1';
         }
 
         $request->validate($myRules);

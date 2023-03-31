@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('linkhead')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <link rel="prefetch">
+@endsection
 
 @section('container')
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Non-Medis/</span> Provinsi</h4>
@@ -46,7 +50,7 @@
                 <h5 class="card-header">Provinsi Data</h5>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-bordered propinsi-datatable">
+                        <table class="table table-hover" id="propinsi-datatable">
                             <thead>
                                 <tr>
                                     <th width="1%">ID</th>
@@ -87,6 +91,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
+    <script src="/assets/js/form-basic-inputs.js"></script>
+
     <script type="text/javascript">
         $(function() {
             $.ajaxSetup({
@@ -94,7 +100,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('.propinsi-datatable').DataTable({
+            var table = $('#propinsi-datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('propinsi.index') }}",
@@ -135,7 +141,7 @@
                         toastr.success(JSON.stringify(data.success));
                         $('#propForm').trigger("reset");
                         table.draw();
-                        $('#myMethod').val("edit");
+                        $('#myMethod').val("create");
 
                     },
                     error: function(data) {

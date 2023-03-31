@@ -1,39 +1,53 @@
 @extends('layouts.main')
 
 @section('linkhead')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
     <link rel="prefetch">
 @endsection
 
 @section('container')
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Non-Medis/</span> Education</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Non-Medis/</span> Kabupaten</h4>
 
     <div class="row">
         <!-- Form Data -->
         <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Form Education</h5>
+                    <h5 class="mb-0">Form Kabupaten</h5>
                 </div>
                 <div class="card-body">
-                    <form id="eduForm" name="eduForm">
+                    <form id="kabForm" name="kabForm">
+
                         <div class="mb-3">
-                            <label class="form-label" for="edu_id">ID Education :</label>
+                            <label class="form-label" for="kab_id">ID Kabupaten :</label>
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
-                                <input type="text" class="form-control" id="edu_id" name="edu_id"
-                                    placeholder="Input ID Education">
+                                <input type="text" class="form-control" id="kab_id" name="kab_id"
+                                    placeholder="Input ID Kabupaten">
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="edu_desc">Education Description :</label>
+                            <label class="form-label" for="kab_name">Kabupaten Name :</label>
                             <div class="input-group input-group-merge">
-                                <span class="input-group-text"><i class="fa-solid fa-user-graduate"></i></span>
-                                <input type="text" class="form-control" id="edu_desc" name="edu_desc"
-                                    placeholder="Input Education Description">
+                                <span class="input-group-text"><i class="fa-regular fa-building"></i></span>
+                                <input type="text" class="form-control" id="kab_name" name="kab_name"
+                                    placeholder="Input Kabupaten Name">
                             </div>
                         </div>
+
+                        {{-- Kecamatan --}}
+                        <div class="mb-3">
+                            <label class="form-label" for="prop_id">Provinsi :</label>
+                            <select class="form-select select2-propinsi" name="prop_id" id="prop_id">
+                                <option value="" disabled selected>Pilih Provinsi</option>
+                                @foreach ($props as $prop)
+                                    <option value="{{ $prop->prop_id }}">{{ $prop->prop_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <input id="myMethod" name="myMethod" type="hidden" value="create">
                         <button type="submit" class="btn btn-success" id="saveBtn">
                             Simpan</button>
@@ -47,29 +61,32 @@
         <div class="col-lg-8">
 
             <div class="card">
-                <h5 class="card-header">Education Data</h5>
+                <h5 class="card-header">Desa Data</h5>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-hover" id="edu-datatable">
+                        <table class="table table-hover" id="kabupaten-datatable">
                             <thead>
                                 <tr>
                                     <th width="1%">ID</th>
-                                    <th width="50%">Description</th>
+                                    <th width="50%">Kota/Kabupaten</th>
+                                    <th width="50%">Provinsi</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- <tr>
-                                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>Angular
-                                                Project</strong></td>
-                                        <td>Albert Cook</td>
+                                {{-- @foreach ($kotas as $kota)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $kota->kota_name }}</td>
+                                        <td>{{ $kota->prov->prov_name }}</td>
                                         <td>
                                             <div class="btn-action text-center">
                                                 <button class="btn btn-primary btn-sm">Edit</button>
                                                 <button class="btn btn-danger btn-sm">Hapus</button>
                                             </div>
                                         </td>
-                                    </tr> --}}
+                                    </tr>
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
@@ -91,27 +108,42 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
+    {{-- Select2 JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     {{-- Page JS --}}
     <script src="/assets/js/form-basic-inputs.js"></script>
 
+    {{-- <script>
+        // In your Javascript (external .js resource or <script> tag)
+        $(document).ready(function() {
+            $('.select-provinsi').select2();
+        });
+    </script> --}}
+
     <script type="text/javascript">
         $(function() {
+            $('.select2-propinsi').select2();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('#edu-datatable').DataTable({
+            var table = $('#kabupaten-datatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('education.index') }}",
+                ajax: "{{ route('kabupaten.index') }}",
                 columns: [{
-                        data: 'edu_id',
-                        name: 'edu_id'
+                        data: 'kab_id',
+                        name: 'kab_id'
                     },
                     {
-                        data: 'edu_desc',
-                        name: 'edu_desc'
+                        data: 'kab_name',
+                        name: 'kab_name'
+                    },
+                    {
+                        data: 'prop.prop_name',
+                        name: 'prop.prop_name'
                     },
                     {
                         data: 'action',
@@ -127,8 +159,8 @@
                 $(this).html('Simpan');
 
                 $.ajax({
-                    data: $('#eduForm').serialize(),
-                    url: "{{ route('education.store') }}",
+                    data: $('#kabForm').serialize(),
+                    url: "{{ route('kabupaten.store') }}",
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
@@ -140,7 +172,8 @@
                         $('input').removeClass("is-invalid");
                         $('.invalid-feedback.d-block').remove();
                         toastr.success(JSON.stringify(data.success));
-                        $('#eduForm').trigger("reset");
+                        $('#kabForm').trigger("reset");
+                        $('.select2-propinsi').val(null).trigger('change');
                         table.draw();
                         $('#myMethod').val("create");
 
@@ -167,27 +200,28 @@
                 });
             });
 
-            $('body').on('click', '.editEducation', function() {
-                var edu_id = $(this).data('id');
+            $('body').on('click', '.editKab', function() {
+                var kab_id = $(this).data('id');
                 // alert(kasir_id);
-                $.get("{{ route('education.index') }}" + '/' + edu_id + '/edit', function(data) {
-                    $('#modelHeading').html("Edit Education");
+                $.get("{{ route('kabupaten.index') }}" + '/' + kab_id + '/edit', function(data) {
+                    $('#modelHeading').html("Edit Kab");
                     $('#myMethod').val("edit");
                     $('#saveBtn').html('Ubah');
-                    $('#edu_id').val(data.edu_id);
-                    $('#edu_desc').val(data.edu_desc);
-
+                    $('#kab_id').val(data.kab_id);
+                    $('#kab_id').val(data.kab_id);
+                    $('#prop_id').val(data.prop_id);
+                    $('#prop_id').val(data.prop_id).trigger('change');
                 })
             });
 
-            $('body').on('click', '.deleteEducation', function() {
+            $('body').on('click', '.deleteKab', function() {
 
-                var edu_id = $(this).data("id");
+                var kab_id = $(this).data("id");
                 if (confirm("Are you sure want to delete!") == true) {
 
                     $.ajax({
                         type: "DELETE",
-                        url: "{{ route('education.store') }}" + '/' + edu_id,
+                        url: "{{ route('kabupaten.store') }}" + '/' + kab_id,
                         success: function(data) {
                             table.draw();
                         },

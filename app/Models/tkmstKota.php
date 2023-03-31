@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class tkmstKota extends Model
 {
@@ -19,10 +18,5 @@ class tkmstKota extends Model
     public function prov(): BelongsTo
     {
         return $this->belongsTo(tkmstProv::class, 'prov_id');
-    }
-
-    public function kec(): HasMany
-    {
-        return $this->hasMany(rsmstKecamatan::class);
     }
 }

@@ -54,9 +54,9 @@ class RsmstJobController extends Controller
 
         //   @dd($request->myMethod);
         if ($request->myMethod == 'create') {
-            $myRules['job_id'] = 'required|unique:rsmst_jobs|max:25|min:3';
+            $myRules['job_id'] = 'required|unique:rsmst_jobs|max:25|min:1';
         } else if ($request->myMethod == 'edit') {
-            $myRules['job_id'] = 'required|max:25|min:3';
+            $myRules['job_id'] = 'required|max:25|min:1';
         }
 
         $request->validate($myRules);

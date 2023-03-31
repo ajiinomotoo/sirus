@@ -54,9 +54,9 @@ class RsmstEducationController extends Controller
 
         //   @dd($request->myMethod);
         if ($request->myMethod == 'create') {
-            $myRules['edu_id'] = 'required|unique:rsmst_educations|max:25|min:3';
+            $myRules['edu_id'] = 'required|unique:rsmst_educations|max:25|min:1';
         } else if ($request->myMethod == 'edit') {
-            $myRules['edu_id'] = 'required|max:25|min:3';
+            $myRules['edu_id'] = 'required|max:25|min:1';
         }
 
         $request->validate($myRules);

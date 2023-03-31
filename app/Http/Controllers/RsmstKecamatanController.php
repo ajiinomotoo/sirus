@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\tkmstKota;
+use App\Models\rsmstKabupaten;
 use App\Models\rsmstKecamatan;
 use Illuminate\Http\Request;
 use DataTables;
@@ -20,6 +20,9 @@ class RsmstKecamatanController extends Controller
             $data = rsmstKecamatan::latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('kab.kab_name', function ($data) {
+                    return $data->kab->kab_name;
+                })
                 ->addColumn('action', function ($row) {
 
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->kec_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editKec">Edit</a>';
@@ -34,7 +37,7 @@ class RsmstKecamatanController extends Controller
 
 
         return view('nonMedis.kecamatan', compact('rsmst_kecamatans'), [
-            // 'kabs' => tkmstKota::all()
+            'kabs' => rsmstKabupaten::all()
         ]);
     }
 
@@ -53,7 +56,7 @@ class RsmstKecamatanController extends Controller
     {
         $myRules = [
             'kec_name' => 'required|max:255',
-            'kota_id' => 'required'
+            'kab_id' => 'required'
         ];
 
         //   @dd($request->myMethod);
@@ -68,7 +71,7 @@ class RsmstKecamatanController extends Controller
         $myPrimer = ['kec_id' => $request->kec_id];
         $myData = [
             'kec_name' => $request->kec_name,
-            'kota_id' => $request->kota_id
+            'kab_id' => $request->kab_id
         ];
         rsmstKecamatan::updateOrCreate($myPrimer, $myData);
 

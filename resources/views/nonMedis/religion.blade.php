@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('linkhead')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
     <link rel="prefetch">
 @endsection
 
@@ -49,7 +50,7 @@
                 <h5 class="card-header">Religion Data</h5>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-bordered religion-datatable">
+                        <table class="table table-hover" id="religion-datatable">
                             <thead>
                                 <tr>
                                     <th width="1%">ID</th>
@@ -90,8 +91,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
-    {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="/assets/js/form-basic-inputs.js"></script>
 
     <script type="text/javascript">
         $(function() {
@@ -100,7 +100,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('.religion-datatable').DataTable({
+            var table = $('#religion-datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('religion.index') }}",
@@ -141,7 +141,7 @@
                         toastr.success(JSON.stringify(data.success));
                         $('#religiForm').trigger("reset");
                         table.draw();
-                        $('#myMethod').val("edit");
+                        $('#myMethod').val("create");
 
                     },
                     error: function(data) {

@@ -36,24 +36,16 @@
                             </div>
                         </div>
 
-                        {{-- <div class="mb-3">
-                            <label for="prov" class="form-label">Provinsi :</label>
-                            <select class="select-provinsi form-select" name="prov_id">
-                                <option selected="">Pilih Provinsi</option>
-                                @foreach ($provs as $prov)
-                                    <option value={{ $prov->prov_id }}>{{ $prov->prov_name }}</option>
+                        {{-- Kabupaten --}}
+                        <div class="mb-3">
+                            <label class="form-label" for="kab_id">Kabupaten :</label>
+                            <select class="form-select select2-kabupaten" name="kab_id" id="kab_id">
+                                <option value="" disabled selected>Pilih Kabupaten</option>
+                                @foreach ($kabs as $kab)
+                                    <option value="{{ $kab->kab_id }}">{{ $kab->kab_name }}</option>
                                 @endforeach
                             </select>
-                        </div> --}}
-
-                        {{-- <div class="mb-3">
-                            <label class="form-label" for="prov">Provinsi Name :</label>
-                            <select class="js-example-basic-single" name="prov_id">
-                                @foreach ($provs as $prov)
-                                    <option value={{ $prov->prov_id }}>{{ $prov->prov_name }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
+                        </div>
 
                         <input id="myMethod" name="myMethod" type="hidden" value="create">
                         <button type="submit" class="btn btn-success" id="saveBtn">
@@ -71,11 +63,11 @@
                 <h5 class="card-header">Kecamatan Data</h5>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-hover" id="kec-datatable">
+                        <table class="table table-hover" id="kecamatan-datatable">
                             <thead>
                                 <tr>
                                     <th width="1%">ID</th>
-                                    <th width="50%">Name</th>
+                                    <th width="50%">Kecamatan</th>
                                     <th width="50%">Kota/Kabupaten</th>
                                     <th>Actions</th>
                                 </tr>
@@ -121,21 +113,15 @@
     {{-- Page JS --}}
     <script src="/assets/js/form-basic-inputs.js"></script>
 
-    {{-- <script>
-        // In your Javascript (external .js resource or <script> tag)
-        $(document).ready(function() {
-            $('.select-provinsi').select2();
-        });
-    </script> --}}
-
     <script type="text/javascript">
         $(function() {
+            $('.select2-kabupaten').select2();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('#kec-datatable').DataTable({
+            var table = $('#kecamatan-datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('kecamatan.index') }}",
@@ -146,6 +132,10 @@
                     {
                         data: 'kec_name',
                         name: 'kec_name'
+                    },
+                    {
+                        data: 'kab.kab_name',
+                        name: 'kab.kab_name'
                     },
                     {
                         data: 'action',
@@ -175,8 +165,9 @@
                         $('.invalid-feedback.d-block').remove();
                         toastr.success(JSON.stringify(data.success));
                         $('#kecForm').trigger("reset");
+                        $('.select2-kabupaten').val(null).trigger('change');
                         table.draw();
-                        $('#myMethod').val("edit");
+                        $('#myMethod').val("create");
 
                     },
                     error: function(data) {
@@ -210,7 +201,8 @@
                     $('#saveBtn').html('Ubah');
                     $('#kec_id').val(data.kec_id);
                     $('#kec_name').val(data.kec_name);
-
+                    $('#kab_id').val(data.kab_id);
+                    $('#kab_id').val(data.kab_id).trigger('change');
                 })
             });
 

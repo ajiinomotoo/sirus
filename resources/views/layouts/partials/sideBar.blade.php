@@ -111,6 +111,13 @@
                 <div data-i18n="Basic">Radiologi</div>
             </a>
         </li> --}}
+        <!-- Pasien -->
+        <li class="menu-item {{ Request::is('medis/pasien') ? 'active' : '' }}">
+            <a href="/medis/pasien" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-user-injured"></i>
+                <div data-i18n="Basic">Pasien</div>
+            </a>
+        </li>
         <!-- Poli -->
         <li class="menu-item {{ Request::is('medis/poli') ? 'active' : '' }}">
             <a href="/medis/poli" class="menu-link">
@@ -156,13 +163,7 @@
                 <div data-i18n="Basic">Profile</div>
             </a>
         </li>
-        {{-- Education --}}
-        <li class="menu-item {{ Request::is('nonMedis/education') ? 'active' : '' }}">
-            <a href="/nonMedis/education" class="menu-link">
-                <i class="menu-icon tf-icons fa-solid fa-graduation-cap"></i>
-                <div data-i18n="Basic">Education</div>
-            </a>
-        </li>
+
         {{-- Out --}}
         <li class="menu-item {{ Request::is('nonMedis/out') ? 'active' : '' }}">
             <a href="/nonMedis/out" class="menu-link">
@@ -170,6 +171,15 @@
                 <div data-i18n="Basic">Out</div>
             </a>
         </li>
+
+        {{-- Education --}}
+        <li class="menu-item {{ Request::is('nonMedis/education') ? 'active' : '' }}">
+            <a href="/nonMedis/education" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-graduation-cap"></i>
+                <div data-i18n="Basic">Education</div>
+            </a>
+        </li>
+
         <!-- Job -->
         <li class="menu-item {{ Request::is('nonMedis/job') ? 'active' : '' }}">
             <a href="/nonMedis/job" class="menu-link">
@@ -177,13 +187,7 @@
                 <div data-i18n="Basic">Job</div>
             </a>
         </li>
-        {{-- Provinsi --}}
-        {{-- <li class="menu-item">
-            <a href="/nonMedis/propinsi" class="menu-link">
-                <i class="menu-icon tf-icons fa-solid fa-location-dot"></i>
-                <div data-i18n="Basic">Provinsi</div>
-            </a>
-        </li> --}}
+
         {{-- Religion --}}
         <li class="menu-item {{ Request::is('nonMedis/religion') ? 'active' : '' }}">
             <a href="/nonMedis/religion" class="menu-link">
@@ -191,18 +195,20 @@
                 <div data-i18n="Basic">Religion</div>
             </a>
         </li>
+
         {{-- Provinsi --}}
-        <li class="menu-item {{ Request::is('nonMedis/provinsi') ? 'active' : '' }}">
-            <a href="/nonMedis/provinsi" class="menu-link">
+        <li class="menu-item {{ Request::is('nonMedis/propinsi') ? 'active' : '' }}">
+            <a href="/nonMedis/propinsi" class="menu-link">
                 <i class="menu-icon tf-icons fa-solid fa-location-dot"></i>
                 <div data-i18n="Basic">Provinsi</div>
             </a>
         </li>
-        {{-- Kota --}}
-        <li class="menu-item {{ Request::is('nonMedis/kota') ? 'active' : '' }}">
-            <a href="/nonMedis/kota" class="menu-link">
+
+        {{-- Kabupaten/Kota --}}
+        <li class="menu-item {{ Request::is('nonMedis/kabupaten') ? 'active' : '' }}">
+            <a href="/nonMedis/kabupaten" class="menu-link">
                 <i class="menu-icon tf-icons fa-regular fa-building"></i>
-                <div data-i18n="Basic">Kota</div>
+                <div data-i18n="Basic">Kota/Kabupaten</div>
             </a>
         </li>
         {{-- Kecamatan --}}
@@ -217,6 +223,25 @@
             <a href="/nonMedis/desa" class="menu-link">
                 <i class="menu-icon tf-icons fa-solid fa-tents"></i>
                 <div data-i18n="Basic">Desa</div>
+            </a>
+        </li>
+
+        {{-- Tkmst --}}
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">tkmst</span>
+        </li>
+        {{-- Provinsi --}}
+        <li class="menu-item {{ Request::is('nonMedis/provinsi') ? 'active' : '' }}">
+            <a href="/nonMedis/provinsi" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-location-dot"></i>
+                <div data-i18n="Basic">Provinsi</div>
+            </a>
+        </li>
+        {{-- Kota --}}
+        <li class="menu-item {{ Request::is('nonMedis/kota') ? 'active' : '' }}">
+            <a href="/nonMedis/kota" class="menu-link">
+                <i class="menu-icon tf-icons fa-regular fa-building"></i>
+                <div data-i18n="Basic">Kota</div>
             </a>
         </li>
     </ul>

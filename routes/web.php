@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\rsmstOut;
-use App\Models\rsmstMstDiag;
+use App\Http\Controllers\RsmstDesaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RsmstJobController;
 use App\Http\Controllers\RsmstOutController;
@@ -14,9 +13,12 @@ use App\Http\Controllers\RsmstPropinsiController;
 use App\Http\Controllers\RsmstReligionController;
 use App\Http\Controllers\RsmstEducationController;
 use App\Http\Controllers\RsmstEntryTypeController;
+use App\Http\Controllers\RsmstKabupatenController;
 use App\Http\Controllers\RsmstKecamatanController;
 use App\Http\Controllers\RsmstKlaimTypeController;
 use App\Http\Controllers\RsmstParameterController;
+use App\Http\Controllers\RsmstPasienController;
+use App\Models\rsmstPasien;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,7 @@ Route::get('/', function () {
 });
 
 // Rsmst
+Route::resource('medis/pasien', RsmstPasienController::class);
 Route::resource('medis/poli', RsmstPoliController::class);
 Route::resource('medis/entrytype', RsmstEntryTypeController::class);
 Route::resource('medis/klaimtype', RsmstKlaimTypeController::class);
@@ -43,11 +46,13 @@ Route::resource('nonMedis/education', RsmstEducationController::class);
 Route::resource('nonMedis/out', RsmstOutController::class);
 Route::resource('nonMedis/job', RsmstJobController::class);
 Route::resource('nonMedis/religion', RsmstReligionController::class);
+Route::resource('nonMedis/propinsi', RsmstPropinsiController::class);
+Route::resource('nonMedis/kabupaten', RsmstKabupatenController::class);
 Route::resource('nonMedis/kecamatan', RsmstKecamatanController::class);
+Route::resource('nonMedis/desa', RsmstDesaController::class);
 
 
 // Tkmst
 Route::resource('nonMedis/profile', TkmstProfileController::class);
-// Route::resource('nonMedis/propinsi', RsmstPropinsiController::class);
 Route::resource('nonMedis/provinsi', TkmstProvController::class);
 Route::resource('nonMedis/kota', TkmstKotaController::class);

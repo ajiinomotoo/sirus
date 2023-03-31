@@ -54,9 +54,9 @@ class RsmstReligionController extends Controller
 
         //   @dd($request->myMethod);
         if ($request->myMethod == 'create') {
-            $myRules['rel_id'] = 'required|unique:rsmst_religions|max:25|min:2';
+            $myRules['rel_id'] = 'required|unique:rsmst_religions|max:25|min:1';
         } else if ($request->myMethod == 'edit') {
-            $myRules['rel_id'] = 'required|max:25|min:2';
+            $myRules['rel_id'] = 'required|max:25|min:1';
         }
 
         $request->validate($myRules);
