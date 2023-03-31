@@ -476,6 +476,8 @@
                     $('#job_id').val(data.job_id).trigger('change');
                     $('#phone').val(data.phone);
                     $('#address').val(data.address);
+                    $('#rt').val(data.rt);
+                    $('#rw').val(data.rw);
                     $('#des_id').val(data.des_id).trigger('change');
                     $('#kec_id').val(data.kec_id).trigger('change');
                     $('#kab_id').val(data.kab_id).trigger('change');
