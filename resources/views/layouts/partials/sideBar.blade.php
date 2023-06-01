@@ -118,6 +118,30 @@
                 <div data-i18n="Basic">Pasien</div>
             </a>
         </li>
+
+        <!-- Rawat Jalan -->
+        <li class="menu-item {{ Request::is('medis/rawatjalan') ? 'active' : '' }}">
+            <a href="/medis/rawatjalan" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-notes-medical"></i>
+                <div data-i18n="Basic">Rawat Jalan</div>
+            </a>
+        </li>
+        <!-- Rawat Jalan (Online) -->
+        <li class="menu-item {{ Request::is('medis/rjonline') ? 'active' : '' }}">
+            <a href="/medis/rjonline" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-notes-medical"></i>
+                <div data-i18n="Basic">Rawat Jalan &#40;Online&#41;</div>
+            </a>
+        </li>
+
+        <!-- Doctor -->
+        <li class="menu-item {{ Request::is('medis/doctor') ? 'active' : '' }}">
+            <a href="/medis/doctor" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-user-doctor"></i>
+                <div data-i18n="Basic">Dokter</div>
+            </a>
+        </li>
+
         <!-- Poli -->
         <li class="menu-item {{ Request::is('medis/poli') ? 'active' : '' }}">
             <a href="/medis/poli" class="menu-link">

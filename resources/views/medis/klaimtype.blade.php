@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('linkhead')
+    <link rel="stylesheet" href="/assets/css/datatables/datatables.min.css">
     <link rel="prefetch">
 @endsection
 
@@ -18,7 +19,7 @@
                     <form id="klaimForm" name="klaimForm">
                         <div class="mb-3">
                             <label class="form-label" for="klaim_id">Klaim ID :</label>
-                            <div class="input-group input-group-merge">
+                            <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
                                 <input type="text" class="form-control" id="klaim_id" name="klaim_id"
                                     placeholder="Input Klaim ID">
@@ -27,7 +28,7 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="klaim_desc">Klaim Description :</label>
-                            <div class="input-group input-group-merge">
+                            <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-file-signature"></i></span>
                                 <input type="text" class="form-control" id="klaim_desc" name="klaim_desc"
                                     placeholder="Input Klaim Description">
@@ -69,12 +70,12 @@
                 <h5 class="card-header">Klaim Data</h5>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-bordered klaim-datatable">
+                        <table class="table hover row-border stripe" id="klaim-datatable">
                             <thead>
                                 <tr>
-                                    <th width="1%">ID</th>
-                                    <th width="50%">Description</th>
-                                    <th width="50%">status</th>
+                                    <th>ID</th>
+                                    <th>Description</th>
+                                    <th>status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -106,13 +107,12 @@
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/assets/js/datatables/datatables.min.js"></script>
 
-    {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="/assets/js/form-basic-inputs.js"></script>
 
     <script type="text/javascript">
         $(function() {
@@ -121,7 +121,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('.klaim-datatable').DataTable({
+            var table = $('#klaim-datatable').DataTable({
+                columnDefs: [{
+                    targets: 3,
+                    className: 'dt-center'
+                }],
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('klaimtype.index') }}",
@@ -166,7 +170,7 @@
                         toastr.success(JSON.stringify(data.success));
                         $('#klaimForm').trigger("reset");
                         table.draw();
-                        $('#myMethod').val("edit");
+                        $('#myMethod').val("create");
 
                     },
                     error: function(data) {
@@ -195,10 +199,10 @@
                 var klaim_id = $(this).data('id');
                 // alert(kasir_id);
                 $.get("{{ route('klaimtype.index') }}" + '/' + klaim_id + '/edit', function(data) {
-                    $('#modelHeading').html("Edit Entry");
+                    $('#modelHeading').html("Edit Klaim");
                     $('#myMethod').val("edit");
                     $('#saveBtn').html('Ubah');
-                    $('#klaim_id').val(data.klaim_id);
+                    $('#klaim_id').val(data.klaim_id)
                     $('#klaim_desc').val(data.klaim_desc);
 
                 })

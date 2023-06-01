@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('linkhead')
+    <link rel="stylesheet" href="/assets/css/datatables/datatables.min.css">
     <link rel="prefetch">
 @endsection
 
@@ -18,7 +19,7 @@
                     <form id="entryForm" name="entryForm">
                         <div class="mb-3">
                             <label class="form-label" for="entry_id">Entry ID :</label>
-                            <div class="input-group input-group-merge">
+                            <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
                                 <input type="text" class="form-control" id="entry_id" name="entry_id"
                                     placeholder="Input Entry ID">
@@ -27,7 +28,7 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="entry_desc">Entry Description :</label>
-                            <div class="input-group input-group-merge">
+                            <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-file-signature"></i></span>
                                 <input type="text" class="form-control" id="entry_desc" name="entry_desc"
                                     placeholder="Input Entry Description">
@@ -49,11 +50,11 @@
                 <h5 class="card-header">Entrytype Data</h5>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-bordered entry-datatable">
+                        <table class="table hover row-border stripe" id="entry-datatable">
                             <thead>
                                 <tr>
-                                    <th width="1%">ID</th>
-                                    <th width="50%">Description</th>
+                                    <th>ID</th>
+                                    <th>Description</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -85,13 +86,13 @@
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/assets/js/datatables/datatables.min.js"></script>
 
-    {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    {{-- Page JS --}}
+    <script src="/assets/js/form-basic-inputs.js"></script>
 
     <script type="text/javascript">
         $(function() {
@@ -100,7 +101,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('.entry-datatable').DataTable({
+            var table = $('#entry-datatable').DataTable({
+                columnDefs: [{
+                    targets: 2,
+                    className: 'dt-center'
+                }],
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('entrytype.index') }}",
@@ -131,14 +136,12 @@
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
-
-
                         // const myobj = JSON.parse(data.responseText);
                         // alert(JSON.stringify(data.success));
                         /* // Normalize and remove element and class is-invalid */
                         $('input').removeClass("is-invalid");
                         $('.invalid-feedback.d-block').remove();
-                        toastr.success(JSON.stringify(data.success));
+                        toastr.success(JSON.stringify(data.success), 'Entrytype');
                         $('#entryForm').trigger("reset");
                         table.draw();
                         $('#myMethod').val("edit");
@@ -180,24 +183,41 @@
             });
 
             $('body').on('click', '.deleteEntry', function() {
-
                 var entry_id = $(this).data("id");
-                if (confirm("Are you sure want to delete!") == true) {
-
-                    $.ajax({
-                        type: "DELETE",
-                        url: "{{ route('entrytype.store') }}" + '/' + entry_id,
-                        success: function(data) {
-                            table.draw();
-                        },
-                        error: function(data) {
-                            alert(JSON.stringify(data));
-                            console.log('Error:', data);
-                        }
-                    });
-                }
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: "{{ route('entrytype.store') }}" + '/' + entry_id,
+                            success: function(data) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Data deleted successfully ',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                table.draw();
+                            },
+                            error: function(data) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Something went wrong!',
+                                })
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
+                })
             });
-
         });
     </script>
 @endpush

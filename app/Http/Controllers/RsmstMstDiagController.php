@@ -54,9 +54,9 @@ class RsmstMstDiagController extends Controller
 
         //   @dd($request->myMethod);
         if ($request->myMethod == 'create') {
-            $myRules['diag_id'] = 'required|unique:rsmst_mstdiags|max:25|min:3';
+            $myRules['diag_id'] = 'required|unique:rsmst_mstdiags|max:25|min:1';
         } else if ($request->myMethod == 'edit') {
-            $myRules['diag_id'] = 'required|max:25|min:3';
+            $myRules['diag_id'] = 'required|max:25|min:1';
         }
 
         $request->validate($myRules);
@@ -65,7 +65,7 @@ class RsmstMstDiagController extends Controller
         $myData = ['diag_desc' => $request->diag_desc];
         rsmstMstDiag::updateOrCreate($myPrimer, $myData);
 
-        return response()->json(['success' => 'Entrytype saved successfully.']);
+        return response()->json(['success' => 'Diagnosa saved successfully.']);
     }
 
     /**
@@ -102,6 +102,6 @@ class RsmstMstDiagController extends Controller
 
         // dd($sx);
 
-        return response()->json(['success' => 'Entrytype deleted successfully.']);
+        return response()->json(['success' => 'Diagnosa deleted successfully.']);
     }
 }

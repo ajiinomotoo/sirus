@@ -1,8 +1,8 @@
 @extends('layouts.main')
 
 @section('linkhead')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="/assets/css/datatables/datatables.min.css">
+    <link href="/assets/css/select2.min.css" rel="stylesheet" />
     <link rel="prefetch">
 @endsection
 
@@ -17,35 +17,39 @@
             </div>
 
             <div class="card-body">
-                <form id="pasienForm" name="pasienForm">
+                <form id="pasienForm" name="pasienForm" class="needs-validation" novalidate>
 
-                    {{-- ID Pasien --}}
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label" for="reg_no">ID Pasien :</label>
-                        <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
-                            <input type="text" class="form-control" id="reg_no" name="reg_no"
-                                placeholder="Input ID Pasien">
+                    <div class="row">
+                        {{-- ID Pasien --}}
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="reg_no">ID Pasien :</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-id-card" disabled></i></span>
+                                <input type="text" class="form-control" id="reg_no" name="reg_no"
+                                    placeholder="Input ID Pasien" readonly value="{{ $noRM }}">
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
                         {{-- Form Kiri --}}
-                        <div class="group-form-kiri col-md-6">
+                        <div class="group-form-kiri col-lg-6">
                             {{-- Nama Pasien --}}
                             <div class="mb-3">
                                 <label class="form-label" for="reg_name">Pasien Name :</label>
-                                <div class="input-group input-group-merge">
+                                <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-hospital"></i></span>
                                     <input type="text" class="form-control" id="reg_name" name="reg_name"
-                                        placeholder="Input Pasien Name">
+                                        onkeyup="validateName()" placeholder="Input Pasien Name">
+                                    <span class="custom-error" id="name-error"></span>
+
                                 </div>
                             </div>
 
                             {{-- JKN --}}
                             <div class="mb-3">
                                 <label class="form-label" for="no_jkn">No. JKN :</label>
-                                <div class="input-group input-group-merge">
+                                <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-hospital"></i></span>
                                     <input type="text" class="form-control" id="no_jkn" name="no_jkn"
                                         placeholder="Input No. JKN">
@@ -55,7 +59,7 @@
                             {{-- NIK --}}
                             <div class="mb-3">
                                 <label class="form-label" for="nik_bpjs">NIK :</label>
-                                <div class="input-group input-group-merge">
+                                <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-hospital"></i></span>
                                     <input type="text" class="form-control" id="nik_bpjs" name="nik_bpjs"
                                         placeholder="Input NIK">
@@ -108,7 +112,7 @@
                             {{-- Tgl. Lahir --}}
                             <div class="mb-3">
                                 <label for="birth_date" class="col-md-2 col-form-label">Tgl. Lahir :</label>
-                                <div class="input-group input-group-merge">
+                                <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-hospital"></i></span>
                                     <input class="form-control" type="date" value="" id="birth_date"
                                         name="birth_date">
@@ -118,7 +122,7 @@
                             {{-- Tempat Lahir --}}
                             <div class="mb-3">
                                 <label class="form-label" for="birth_place">Tempat Lahir :</label>
-                                <div class="input-group input-group-merge">
+                                <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-hospital"></i></span>
                                     <input type="text" class="form-control" id="birth_place" name="birth_place"
                                         placeholder="Input Tempat Lahir">
@@ -128,18 +132,22 @@
                             {{-- Agama --}}
                             <div class="mb-3">
                                 <label class="form-label" for="rel_id">Agama :</label>
-                                <select class="form-select select2-agama" name="rel_id" id="rel_id">
-                                    <option value="" disabled selected>Pilih Agama</option>
-                                    @foreach ($rels as $rel)
-                                        <option value="{{ $rel->rel_id }}">{{ $rel->rel_desc }}</option>
-                                    @endforeach
-                                </select>
+                                <div class="input-group">
+                                    <select class="form-select select2-agama" name="rel_id" id="rel_id"
+                                        style="width:100%;">
+                                        <option value="" disabled selected>Pilih Agama</option>
+                                        @foreach ($rels as $rel)
+                                            <option value="{{ $rel->rel_id }}">{{ $rel->rel_desc }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                             {{-- Pendidikan --}}
                             <div class="mb-3">
                                 <label class="form-label" for="edu_id">Pendidikan :</label>
-                                <select class="form-select select2-pendidikan" name="edu_id" id="edu_id">
+                                <select class="form-select select2-pendidikan" name="edu_id" id="edu_id"
+                                    style="width:100%;">
                                     <option value="" disabled selected>Pilih Pendidikan</option>
                                     @foreach ($edus as $edu)
                                         <option value="{{ $edu->edu_id }}">{{ $edu->edu_desc }}</option>
@@ -150,7 +158,8 @@
                             {{-- Pekerjaan --}}
                             <div class="mb-3">
                                 <label class="form-label" for="job_id">Pekerjaan :</label>
-                                <select class="form-select select2-pekerjaan" name="job_id" id="job_id">
+                                <select class="form-select select2-pekerjaan" name="job_id" id="job_id"
+                                    style="width:100%;">
                                     <option value="" disabled selected>Pilih Pekerjaan</option>
                                     @foreach ($jobs as $job)
                                         <option value="{{ $job->job_id }}">{{ $job->job_name }}</option>
@@ -160,11 +169,11 @@
                         </div>
 
                         {{-- Form Kanan --}}
-                        <div class="group-form-kanan col-md-6">
+                        <div class="group-form-kanan col-lg-6">
                             {{-- Phone --}}
                             <div class="mb-3">
                                 <label class="form-label" for="phone">Phone :</label>
-                                <div class="input-group input-group-merge">
+                                <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
                                     <input type="text" class="form-control" id="phone" name="phone"
                                         placeholder="Input Phone">
@@ -177,14 +186,15 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
                                     <textarea class="form-control" placeholder="Input Address" spellcheck="false" id="address" name="address"
-                                        rows="4" style="height: 122px"></textarea>
+                                        style="height: 125.5px"></textarea>
                                 </div>
                             </div>
 
                             {{-- Desa --}}
                             <div class="mb-3">
                                 <label class="form-label" for="des_id">Desa :</label>
-                                <select class="form-select select2-desa" name="des_id" id="des_id">
+                                <select class="form-select select2-desa" name="des_id" id="des_id"
+                                    style="width:100%;">
                                     <option value="" disabled selected>Pilih Desa</option>
                                     @foreach ($desas as $desa)
                                         <option value="{{ $desa->des_id }}">{{ $desa->des_name }}</option>
@@ -193,21 +203,21 @@
                             </div>
 
                             {{-- RT/RW --}}
-                            <div class="row mb-2">
-                                <div class="mb-3 col-md-5">
+                            <div class="row mb-1">
+                                <div class="mb-2 col-md-5">
                                     <label class="form-label" for="rt">RT :</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
-                                        <input type="text" class="form-control form-control-sm" id="rt"
-                                            name="rt" placeholder="Input RT">
+                                        <input type="text" class="form-control" id="rt" name="rt"
+                                            placeholder="Input RT">
                                     </div>
                                 </div>
                                 <div class="mb-3 col-md-5">
                                     <label class="form-label" for="rw">RW :</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
-                                        <input type="text" class="form-control form-control-sm" id="rw"
-                                            name="rw" placeholder="Input RW">
+                                        <input type="text" class="form-control" id="rw" name="rw"
+                                            placeholder="Input RW">
                                     </div>
                                 </div>
                             </div>
@@ -215,18 +225,22 @@
                             {{-- Kecamatan --}}
                             <div class="mb-3">
                                 <label class="form-label" for="kec_id">Kecamatan :</label>
-                                <select class="form-select select2-kecamatan" name="kec_id" id="kec_id">
-                                    <option value="" disabled selected>Pilih Kecamatan</option>
-                                    @foreach ($kecs as $kec)
-                                        <option value="{{ $kec->kec_id }}">{{ $kec->kec_name }}</option>
-                                    @endforeach
-                                </select>
+                                <div class="input-group">
+                                    <select class="form-select select2-kecamatan" name="kec_id" id="kec_id"
+                                        style="width:100%;">
+                                        <option value="" disabled selected>Pilih Kecamatan</option>
+                                        @foreach ($kecs as $kec)
+                                            <option value="{{ $kec->kec_id }}">{{ $kec->kec_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                             {{-- Kabupaten --}}
                             <div class="mb-3">
                                 <label class="form-label" for="kab_id">Kabupaten :</label>
-                                <select class="form-select select2-kabupaten" name="kab_id" id="kab_id">
+                                <select class="form-select select2-kabupaten" name="kab_id" id="kab_id"
+                                    style="width:100%;">
                                     <option value="" disabled selected>Pilih Kecamatan</option>
                                     @foreach ($kabs as $kab)
                                         <option value="{{ $kab->kab_id }}">{{ $kab->kab_name }}</option>
@@ -237,7 +251,8 @@
                             {{-- Provinsi --}}
                             <div class="mb-3">
                                 <label class="form-label" for="prop_id">Provinsi :</label>
-                                <select class="form-select select2-provinsi" name="prop_id" id="prop_id">
+                                <select class="form-select select2-provinsi" name="prop_id" id="prop_id"
+                                    style="width:100%;">
                                     <option value="" disabled selected>Pilih Provinsi</option>
                                     @foreach ($props as $prop)
                                         <option value="{{ $prop->prop_id }}">{{ $prop->prop_name }}</option>
@@ -265,7 +280,7 @@
             <h5 class="card-header">Pasien Data</h5>
             <div class="card-body">
                 <div class="table-responsive text-nowrap">
-                    <table class="table table-hover" id="pasien-datatable">
+                    <table class="table hover row-border stripe" id="pasien-datatable">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -275,7 +290,6 @@
                                 <th>Sex</th>
                                 <th>Tgl. Lahir</th>
                                 <th>Tempat Lahir</th>
-                                <th>Agama</th>
                                 <th>Phone</th>
                                 <th>Alamat</th>
                                 <th>Desa</th>
@@ -309,32 +323,56 @@
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/assets/js/datatables/datatables.min.js"></script>
 
     {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="/assets/js/select2.min.js"></script>
+
+    {{-- Custom Validation Form --}}
+    <script src="/js/customvalidform.js"></script>
 
     {{-- Page JS --}}
     <script src="/assets/js/form-basic-inputs.js"></script>
 
     <script type="text/javascript">
         $(function() {
-            $('.select2-agama').select2();
-            $('.select2-pendidikan').select2();
-            $('.select2-pekerjaan').select2();
-            $('.select2-desa').select2();
-            $('.select2-kecamatan').select2();
-            $('.select2-kabupaten').select2();
-            $('.select2-provinsi').select2();
+            $('.select2-agama').select2({
+                placeholder: "Pilih Agama"
+            });
+            $('.select2-pendidikan').select2({
+                placeholder: "Pilih Pendidikan"
+            });
+            $('.select2-pekerjaan').select2({
+                placeholder: "Pilih Pekerjaan"
+            });
+            $('.select2-desa').select2({
+                placeholder: "Pilih Desa"
+            });
+            $('.select2-kecamatan').select2({
+                placeholder: "Pilih Kecamatan"
+            });
+            $('.select2-kabupaten').select2({
+                placeholder: "Pilih Kabupaten"
+            });
+            $('.select2-provinsi').select2({
+                placeholder: "Pilih Provinsi"
+            });
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
             var table = $('#pasien-datatable').DataTable({
+                order: [
+                    [0, 'desc']
+                ],
+                columnDefs: [{
+                    targets: 13,
+                    className: 'dt-center'
+                }],
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('pasien.index') }}",
@@ -365,10 +403,6 @@
                     {
                         data: 'birth_place',
                         name: 'birth_place'
-                    },
-                    {
-                        data: 'rel_id',
-                        name: 'rel_id'
                     },
                     {
                         data: 'phone',
@@ -414,14 +448,6 @@
                     dataType: 'json',
                     success: function(data) {
 
-
-                        // const myobj = JSON.parse(data.responseText);
-                        // alert(JSON.stringify(data.success));
-                        /* // Normalize and remove element and class is-invalid */
-                        $('input').removeClass("is-invalid");
-                        $('.invalid-feedback.d-block').remove();
-                        toastr.success(JSON.stringify(data.success));
-                        $('#pasienForm').trigger("reset");
                         $('.select2-agama').val(null).trigger('change');
                         $('.select2-pendidikan').val(null).trigger('change');
                         $('.select2-pekerjaan').val(null).trigger('change');
@@ -429,10 +455,30 @@
                         $('.select2-kecamatan').val(null).trigger('change');
                         $('.select2-kabupaten').val(null).trigger('change');
                         $('.select2-provinsi').val(null).trigger('change');
+                        $('input').removeClass("is-invalid");
+                        $('textarea').removeClass("is-invalid");
+                        $('select').removeClass("is-invalid");
+                        $('.invalid-feedback.d-block').remove();
+                        toastr.success(JSON.stringify(data.success));
+                        $('#pasienForm').trigger("reset");
                         table.draw();
                         $('#myMethod').val("create");
 
+                        $.ajax({
+                            data: $('#pasienForm').serialize(),
+                            url: "{{ route('pasienRegno') }}",
+                            type: "GET",
+                            // dataType: 'json',
+                            success: function(data) {
+                                $('#reg_no').val(data);
+                            },
+                            error: function(data) {
+                                /* // if error before insert data */
+                                console.log('Error:', data.responseText);
+                            }
+                        });
                     },
+
                     error: function(data) {
                         /* // if error before insert data */
                         console.log('Error:', data);
@@ -447,9 +493,9 @@
                                 $('#' + i).after(
                                     `<div class="invalid-feedback d-block">${value}</div>`
                                 );
-
                             });
                         });
+
                         $('#saveBtn').html('Simpan');
                     }
                 });
@@ -466,7 +512,7 @@
                     $('#reg_name').val(data.reg_name);
                     $('#no_jkn').val(data.no_jkn);
                     $('#nik_bpjs').val(data.nik_bpjs);
-                    $('#sex').val(data.sex);
+                    $("input[name=sex][value=" + data.sex + "]").prop('checked', true);
                     $('#age').val(data.age);
                     $('#blood').val(data.blood);
                     $('#birth_date').val(data.birth_date);
@@ -484,16 +530,14 @@
                     $('#prop_id').val(data.prop_id).trigger('change');
                 })
             });
-
             $('body').on('click', '.deletePasien', function() {
-
                 var reg_no = $(this).data("id");
                 if (confirm("Are you sure want to delete?") == true) {
-
                     $.ajax({
                         type: "DELETE",
                         url: "{{ route('pasien.store') }}" + '/' + reg_no,
                         success: function(data) {
+                            toastr.success(JSON.stringify(data.success));
                             table.draw();
                         },
                         error: function(data) {
@@ -503,7 +547,6 @@
                     });
                 }
             });
-
         });
     </script>
 @endpush

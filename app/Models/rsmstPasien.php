@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class rsmstPasien extends Model
 {
@@ -14,6 +15,11 @@ class rsmstPasien extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $guarded = [''];
+
+    public function rj(): HasMany
+    {
+        return $this->hasMany(rstxnRjhdrs::class);
+    }
 
     public function rel(): BelongsTo
     {

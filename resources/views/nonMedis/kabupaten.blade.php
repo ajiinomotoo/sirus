@@ -1,8 +1,8 @@
 @extends('layouts.main')
 
 @section('linkhead')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="/assets/css/datatables/datatables.min.css">
+    <link href="/assets/css/select2.min.css" rel="stylesheet" />
     <link rel="prefetch">
 @endsection
 
@@ -21,7 +21,7 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="kab_id">ID Kabupaten :</label>
-                            <div class="input-group input-group-merge">
+                            <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
                                 <input type="text" class="form-control" id="kab_id" name="kab_id"
                                     placeholder="Input ID Kabupaten">
@@ -30,7 +30,7 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="kab_name">Kabupaten Name :</label>
-                            <div class="input-group input-group-merge">
+                            <div class="input-group">
                                 <span class="input-group-text"><i class="fa-regular fa-building"></i></span>
                                 <input type="text" class="form-control" id="kab_name" name="kab_name"
                                     placeholder="Input Kabupaten Name">
@@ -40,7 +40,7 @@
                         {{-- Kecamatan --}}
                         <div class="mb-3">
                             <label class="form-label" for="prop_id">Provinsi :</label>
-                            <select class="form-select select2-propinsi" name="prop_id" id="prop_id">
+                            <select class="select2-propinsi" name="prop_id" id="prop_id" style="width: 100%">
                                 <option value="" disabled selected>Pilih Provinsi</option>
                                 @foreach ($props as $prop)
                                     <option value="{{ $prop->prop_id }}">{{ $prop->prop_name }}</option>
@@ -64,12 +64,12 @@
                 <h5 class="card-header">Desa Data</h5>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-hover" id="kabupaten-datatable">
+                        <table class="table hover row-border stripe" id="kabupaten-datatable">
                             <thead>
                                 <tr>
-                                    <th width="1%">ID</th>
-                                    <th width="50%">Kota/Kabupaten</th>
-                                    <th width="50%">Provinsi</th>
+                                    <th>ID</th>
+                                    <th>Kota/Kabupaten</th>
+                                    <th>Provinsi</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -103,33 +103,32 @@
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/assets/js/datatables/datatables.min.js"></script>
 
     {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="/assets/js/select2.min.js"></script>
 
     {{-- Page JS --}}
     <script src="/assets/js/form-basic-inputs.js"></script>
 
-    {{-- <script>
-        // In your Javascript (external .js resource or <script> tag)
-        $(document).ready(function() {
-            $('.select-provinsi').select2();
-        });
-    </script> --}}
-
     <script type="text/javascript">
         $(function() {
-            $('.select2-propinsi').select2();
+            $('.select2-propinsi').select2({
+                placeholder: "Pilih Provinsi"
+            });
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
             var table = $('#kabupaten-datatable').DataTable({
+                columnDefs: [{
+                    targets: 3,
+                    className: 'dt-center'
+                }],
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('kabupaten.index') }}",

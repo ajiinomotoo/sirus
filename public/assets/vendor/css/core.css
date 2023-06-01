@@ -467,7 +467,8 @@ legend+* {
 }
 
 [type=search] {
-  outline-offset: -2px;
+  outline-offset: 0px;
+  outline-color: #696cff7d;
   -webkit-appearance: textfield;
 }
 
@@ -2857,6 +2858,18 @@ textarea.form-control-lg {
   width: 100%;
 }
 
+.input-group span.custom-error {
+  position: absolute;
+  right: 17px;
+  bottom: 7px;
+  font-size: 14px;
+  color: red;
+}
+
+.input-group span.custom-error i {
+  color: seagreen;
+}
+
 .input-group>.form-control,
 .input-group>.form-select {
   position: relative;
@@ -2933,6 +2946,8 @@ textarea.form-control-lg {
   margin-left: -1px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
 }
 
 .btn {
@@ -8900,6 +8915,7 @@ button:focus {
 .was-validated .form-control:invalid,
 .form-control.is-invalid {
   border-color: #ff3e1d;
+
 }
 
 .dark-style .was-validated .form-control:invalid,

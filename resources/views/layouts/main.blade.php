@@ -43,6 +43,9 @@
 
     <link rel="stylesheet" href="/assets/toastr/toastr.min.css">
 
+    {{-- SweetAlert --}}
+    <link rel="stylesheet" href="/assets/css/sweetalert2.min.css">
+
     @yield('linkhead')
 
     <!-- Page CSS -->
@@ -128,6 +131,9 @@
 
     {{-- Toast --}}
     <script src="/assets/toastr/toastr.min.js"></script>
+
+    {{-- SweetAlert --}}
+    <script src="/assets/js/sweetalert2.min.js"></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>

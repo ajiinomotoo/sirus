@@ -54,9 +54,9 @@ class RsmstEntryTypeController extends Controller
 
         //   @dd($request->myMethod);
         if ($request->myMethod == 'create') {
-            $myRules['entry_id'] = 'required|unique:rsmst_entrytypes|max:25|min:3';
+            $myRules['entry_id'] = 'required|unique:rsmst_entrytypes|max:25|min:1';
         } else if ($request->myMethod == 'edit') {
-            $myRules['entry_id'] = 'required|max:25|min:3';
+            $myRules['entry_id'] = 'required|max:25|min:1';
         }
 
         $request->validate($myRules);
@@ -65,7 +65,7 @@ class RsmstEntryTypeController extends Controller
         $myData = ['entry_desc' => $request->entry_desc];
         rsmstEntryType::updateOrCreate($myPrimer, $myData);
 
-        return response()->json(['success' => 'Entrytype saved successfully.']);
+        return response()->json(['success' => 'created successfully']);
     }
 
     /**

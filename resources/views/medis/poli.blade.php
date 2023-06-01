@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('linkhead')
+    <link rel="stylesheet" href="/assets/css/datatables/datatables.min.css">
     <link rel="prefetch">
 @endsection
 
@@ -18,7 +19,7 @@
                     <form id="poliForm" name="poliForm">
                         <div class="mb-3">
                             <label class="form-label" for="poli_id">ID Poli :</label>
-                            <div class="input-group input-group-merge">
+                            <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
                                 <input type="text" class="form-control" id="poli_id" name="poli_id"
                                     placeholder="Input ID Poli">
@@ -27,7 +28,7 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="poli_desc">Poli Description :</label>
-                            <div class="input-group input-group-merge">
+                            <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-hospital"></i></span>
                                 <input type="text" class="form-control" id="poli_desc" name="poli_desc"
                                     placeholder="Input Poli Description">
@@ -49,11 +50,11 @@
                 <h5 class="card-header">Poli Data</h5>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-bordered poli-datatable">
+                        <table class="table hover row-border stripe" id="poli-datatable">
                             <thead>
                                 <tr>
-                                    <th width="1%">ID</th>
-                                    <th width="50%">Description</th>
+                                    <th>ID</th>
+                                    <th>Description</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -85,13 +86,13 @@
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/assets/js/datatables/datatables.min.js"></script>
 
-    {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    {{-- Page JS --}}
+    <script src="/assets/js/form-basic-inputs.js"></script>
 
     <script type="text/javascript">
         $(function() {
@@ -100,7 +101,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('.poli-datatable').DataTable({
+            var table = $('#poli-datatable').DataTable({
+                columnDefs: [{
+                    targets: 2,
+                    className: 'dt-center'
+                }],
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('poli.index') }}",
@@ -167,7 +172,7 @@
             });
 
             $('body').on('click', '.editPoli', function() {
-                var job_id = $(this).data('id');
+                var poli_id = $(this).data('id');
                 // alert(kasir_id);
                 $.get("{{ route('poli.index') }}" + '/' + poli_id + '/edit', function(data) {
                     $('#modelHeading').html("Edit Poli");

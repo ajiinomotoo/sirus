@@ -56,9 +56,9 @@ class RsmstKlaimTypeController extends Controller
 
         //   @dd($request->myMethod);
         if ($request->myMethod == 'create') {
-            $myRules['klaim_id'] = 'required|unique:rsmst_klaimtypes|max:25|min:3';
+            $myRules['klaim_id'] = 'required|unique:rsmst_klaimtypes|max:25|min:1';
         } else if ($request->myMethod == 'edit') {
-            $myRules['klaim_id'] = 'required|max:25|min:3';
+            $myRules['klaim_id'] = 'required|max:25|min:1';
         }
 
         $request->validate($myRules);

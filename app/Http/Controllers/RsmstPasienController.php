@@ -26,8 +26,13 @@ class RsmstPasienController extends Controller
             $data = rsmstPasien::latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('rel_id', function ($data) {
-                    return $data->rel->rel_desc;
+
+                ->editColumn('sex', function ($data) {
+                    if ($data->sex == 'L') {
+                        return 'Laki-Laki';
+                    } else {
+                        return 'Perempuan';
+                    }
                 })
                 ->editColumn('des_id', function ($data) {
                     return $data->desa->des_name;
@@ -53,6 +58,16 @@ class RsmstPasienController extends Controller
                 ->make(true);
         }
 
+        // $regno = DB::table('rsmst_pasiens')->select(DB::raw('MAX(RIGHT(reg_no,6))as kode'));
+        // $noreg = "";
+        // if ($regno->count() > 0) {
+        //     foreach ($regno->get() as $no) {
+        //         $tmp = ((int)$no->kode) + 1;
+        //         $noreg = sprintf("%06s", $tmp);
+        //     }
+        // } else {
+        //     $noreg = "000001";
+        // }
 
         return view('medis.pasien', compact('rsmst_pasiens'), [
             'rels' => rsmstReligion::all(),
@@ -61,7 +76,8 @@ class RsmstPasienController extends Controller
             'desas' => rsmstDesa::all(),
             'kecs' => rsmstKecamatan::all(),
             'kabs' => rsmstKabupaten::all(),
-            'props' => rsmstPropinsi::all()
+            'props' => rsmstPropinsi::all(),
+            'noRM' => RsmstPasienController::myregno()
         ]);
     }
 
@@ -104,12 +120,12 @@ class RsmstPasienController extends Controller
         if ($request->myMethod == 'create') {
             $myRules['reg_no'] = 'required|unique:rsmst_pasiens|max:25|min:1';
         } else if ($request->myMethod == 'edit') {
-            $myRules['reg_no'] = 'required|max:25|min:1';
+            $myRules['reg_no'] = 'max:25|min:1';
         }
 
         $request->validate($myRules);
-
         $myPrimer = ['reg_no' => $request->reg_no];
+
         $myData = [
             'reg_name' => $request->reg_name,
             'no_jkn' => $request->no_jkn,
@@ -129,11 +145,12 @@ class RsmstPasienController extends Controller
             'rw' => $request->rw,
             'kec_id' => $request->kec_id,
             'kab_id' => $request->kab_id,
-            'prop_id' => $request->prop_id
+            'prop_id' => $request->prop_id,
+
         ];
         rsmstPasien::updateOrCreate($myPrimer, $myData);
 
-        return response()->json(['success' => 'Pasien saved successfully.']);
+        return response()->json(['success' => 'created successfully']);
     }
 
     /**
@@ -170,6 +187,22 @@ class RsmstPasienController extends Controller
 
         // dd($sx);
 
-        return response()->json(['success' => 'Pasien deleted successfully.']);
+        return response()->json(['success' => 'Pasien deleted successfully']);
+    }
+
+
+    public function myregno()
+    {
+        $maxReg = rsmstPasien::count('reg_no') + 1;
+        $noRm = sprintf("%06s", $maxReg) . 'Z';
+
+        return $noRm;
+    }
+
+    public function indexApi()
+    {
+        $pasien = rsmstPasien::all();
+
+        return response()->json($pasien);
     }
 }
